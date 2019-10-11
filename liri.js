@@ -14,7 +14,10 @@ var userChoice = process.argv[2];
 
 var userThing = process.argv[3];
 
-switch (userChoice) {
+var fs = require("fs");
+
+function determineOperation() {
+    switch (userChoice) {
     case "concert-this":
         concertThis(userThing);
         break;
@@ -28,11 +31,12 @@ switch (userChoice) {
         movieThis(userThing);
         break;
     case "do-what-it-says":
-        doWhatItSays(userThing);
+        doWhatItSays();
         break;
     default:
         break;
-};
+    }
+}
 
 function concertThis(userThing) {
     axios.get("https://rest.bandsintown.com/artists/" + userThing + "/events?app_id=codingbootcamp").then(function (response) {
@@ -112,10 +116,23 @@ function movieThis(userThing) {
         .catch(function (error) {
             console.log(error);
         });
+    }
 
+function doWhatItSays () {
+        fs.readFile("random.txt", "utf8", function (error, data) {
+            if (error) {
+                return console.log(error);
+            }
+            // console.log(data);
+            var dataArr = data.split(",");
+            //console.log(dataArr);
+            userChoice = dataArr[0];
+        //console.log(userChoice);
+        userThing = dataArr[1];
+        //console.log(userThing);
+        determineOperation();
+        });
+        
+    }
 
-
-
-
-
-}
+determineOperation();
