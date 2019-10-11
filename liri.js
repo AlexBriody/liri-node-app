@@ -1,8 +1,10 @@
-// require("dotenv").config();
+require("dotenv").config();
 
-// var keys = require("./keys.js");
+var keys = require("./keys.js");
 
-// var spotify = new Spotify(keys.spotify);
+var Spotify = require('node-spotify-api');
+
+var spotify = new Spotify(keys.spotify);
 
 var axios = require("axios");
 
@@ -16,7 +18,7 @@ switch (userChoice) {
     case "concert-this":
         concertThis(userThing);
         break;
-    case "spotifyThisSong":
+    case "spotify-this-song":
         spotifyThisSong(userThing);
         break;
     case "movie-this":
@@ -25,18 +27,42 @@ switch (userChoice) {
     case "do-what-it-says":
         doWhatItSays(userThing);
         break;
+    default:
+        break;
 };
 
 function concertThis(userThing) {
-    axios.get("https://rest.bandsintown.com/artists/" + userThing + "/events?app_id=codingbootcamp").then(function(response) {
-            console.log("Artist: " + userThing)
-            console.log("Name of the venue: ", response.data[0].venue.name);
-            console.log("Venue location: " + response.data[0].venue.city);
-            var eventDate = moment(response.data[0].datetime).format("MM/DD/YYYY");
-            console.log("Date of the event: " + eventDate);
-        })
+    axios.get("https://rest.bandsintown.com/artists/" + userThing + "/events?app_id=codingbootcamp").then(function (response) {
+        console.log("Artist: " + userThing)
+        console.log("Name of the venue: ", response.data[0].venue.name);
+        console.log("Venue location: " + response.data[0].venue.city);
+        var eventDate = moment(response.data[0].datetime).format("MM/DD/YYYY");
+        console.log("Date of the event: " + eventDate);
+    })
         .catch(function (error) {
             console.log(error);
-          });
-      }
-    
+        });
+}
+
+function spotifyThisSong(userThing) {
+    if (userThing === "") {
+        userThing = "The Sign";
+    }
+
+    spotify
+        .search({ type: 'track', query: userThing })
+        .then(function (response) {
+            //console.log(JSON.stringify(response));
+            console.log("Artist(s): ", response.tracks.items[0].album.artists[0].name);
+
+            console.log("The song's name: ", response.tracks.items[0].name);
+
+            console.log("Preview link of the song from Spotify: ", response.tracks.items[0].preview_url);
+
+            console.log("The album that the song is from: ", response.tracks.items[0].album.name)
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
+
