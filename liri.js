@@ -53,13 +53,16 @@ function spotifyThisSong(userThing) {
         .search({ type: 'track', query: userThing })
         .then(function (response) {
             //console.log(JSON.stringify(response));
-            console.log("Artist(s): ", response.tracks.items[0].album.artists[0].name);
+            for (var i=0; i<response.tracks.items[i].album.artists[0].name.length; i++) {
+            console.log("Artist(s): ", response.tracks.items[i].album.artists[0].name);
 
-            console.log("The song's name: ", response.tracks.items[0].name);
+            console.log("The song's name: ", response.tracks.items[i].name);
 
-            console.log("Preview link of the song from Spotify: ", response.tracks.items[0].preview_url);
+            console.log("Preview link of the song from Spotify: ", response.tracks.items[i].preview_url);
 
-            console.log("The album that the song is from: ", response.tracks.items[0].album.name)
+            console.log("The album that the song is from: ", response.tracks.items[i].album.name)
+            }
+            
         })
         .catch(function (err) {
             console.log(err);
@@ -81,11 +84,8 @@ function defaultSpotify (){
                     console.log("Preview link of the song from Spotify: ", response.tracks.items[i].preview_url);
         
                     console.log("The album that the song is from: ", response.tracks.items[i].album.name)
-
-
                 }
             }
-            
         })
         .catch(function (err) {
             console.log(err);
