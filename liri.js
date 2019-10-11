@@ -19,7 +19,10 @@ switch (userChoice) {
         concertThis(userThing);
         break;
     case "spotify-this-song":
-        spotifyThisSong(userThing);
+        if (!userThing) {
+            defaultSpotify()
+        } else {
+        spotifyThisSong(userThing)};
         break;
     case "movie-this":
         movieThis(userThing);
@@ -45,9 +48,6 @@ function concertThis(userThing) {
 }
 
 function spotifyThisSong(userThing) {
-    if (userThing === "") {
-        userThing = "The Sign";
-    }
 
     spotify
         .search({ type: 'track', query: userThing })
@@ -66,3 +66,28 @@ function spotifyThisSong(userThing) {
         });
 }
 
+function defaultSpotify (){
+
+    spotify
+        .search({ type: 'track', query: "The Sign" })
+        .then(function (response) {
+            //console.log(JSON.stringify(response));
+            for (var i=0; i<response.tracks.items[i].album.artists[0].name.length; i++) {
+                if (response.tracks.items[i].album.artists[0].name === "Ace of Base") {
+                    console.log("Artist(s): ", response.tracks.items[i].album.artists[0].name);
+
+                    console.log("The song's name: ", response.tracks.items[i].name);
+        
+                    console.log("Preview link of the song from Spotify: ", response.tracks.items[i].preview_url);
+        
+                    console.log("The album that the song is from: ", response.tracks.items[i].album.name)
+
+
+                }
+            }
+            
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
